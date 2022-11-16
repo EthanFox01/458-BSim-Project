@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="bsim/examples"/>
+	<classpathentry kind="src" path="bsim/src"/>
+	<classpathentry kind="src" path="bsim/test"/>
+	<classpathentry kind="lib" path="bsim/legacy/jars/bsim-2008-2d.jar"/>
+	<classpathentry kind="lib" path="bsim/legacy/jars/bsim-2009.jar"/>
+	<classpathentry kind="lib" path="bsim/legacy/jars/bsim-2010.jar"/>
+	<classpathentry kind="lib" path="bsim/lib/bsim-osp.jar"/>
+	<classpathentry kind="lib" path="bsim/lib/core.jar"/>
+	<classpathentry kind="lib" path="bsim/lib/jcommander-1.49-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="bsim/lib/objimport.jar"/>
+	<classpathentry kind="lib" path="bsim/lib/vecmath.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
