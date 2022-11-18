@@ -286,7 +286,7 @@ public class BSimOctreeField
 				 * do each one  but was useful for troubleshooting */		
 				for(BSimTriangle tri:theMesh.getFaces()){
 					//checks against 12 lines
-					Boolean intersect= new Boolean(false);
+					Boolean intersect= false;
 
 					//checks for intersection between each triangle and each of the 12
 					//lines that makes up octree node
