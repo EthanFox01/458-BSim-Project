@@ -24,16 +24,17 @@ public class ORGate {
 	 * 
 	*/
 	public static void generatePopulation(BSim sim, Vector<SignalVesicle> signals, Vector<CleanerVesicle> cleaners,
-			Vector<SenderBacterium> pop, String popID) {
+			Vector<SenderBacterium> pop, String popID, String transmission) {
 		while (pop.size() < 10) {
 			Vector3d position;
 			if (popID == "a")
 				position = new Vector3d(Math.random() * 15 + 30, Math.random() * 15 + 70, Math.random() * 15 + 70);
 			else
 				position = new Vector3d(Math.random() * 15 + 30, Math.random() * 15 + 30, Math.random() * 15 + 70);
-			SenderBacterium b = new SenderBacterium(sim, position);
+			SenderBacterium b = new SenderBacterium(sim, position, transmission);
 			b.setRadius();
 			b.setSurfaceAreaGrowthRate();
+			b.setChildList(new Vector<SenderBacterium>());
 			b.pVesicle(0.4);
 			b.setSignalList(signals);
 			b.setCleanerList(cleaners);
@@ -48,6 +49,7 @@ public class ORGate {
 			ReceiverBacterium b = new ReceiverBacterium(sim, position);
 			b.setRadius();
 			b.setSurfaceAreaGrowthRate();
+			b.setChildList(new Vector<ReceiverBacterium>());
 			b.pVesicle(0.2);
 			b.setVesicleList(signals);
 			if (!b.intersection(pop))
@@ -69,12 +71,12 @@ public class ORGate {
 		final Vector<SignalVesicle> signalsA = new Vector<SignalVesicle>();
 		final Vector<SenderBacterium> popA = new Vector<SenderBacterium>();
 		final Vector<CleanerVesicle> cleanersA = new Vector<CleanerVesicle>();
-		generatePopulation(sim, signalsA, cleanersA, popA, "a");
+		generatePopulation(sim, signalsA, cleanersA, popA, "a", "10");
 
 		final Vector<SignalVesicle> signalsB = new Vector<SignalVesicle>();
 		final Vector<SenderBacterium> popB = new Vector<SenderBacterium>();
 		final Vector<CleanerVesicle> cleanersB = new Vector<CleanerVesicle>();
-		generatePopulation(sim, signalsB, cleanersB, popB, "b");
+		generatePopulation(sim, signalsB, cleanersB, popB, "b", "01");
 
 		final Vector<SignalVesicle> signalsC = new Vector<SignalVesicle>();
 		final Vector<ReceiverBacterium> popC = new Vector<ReceiverBacterium>();
@@ -95,21 +97,38 @@ public class ORGate {
 				for (BSimBacterium c : popC) {
 					c.action();
 				}
-				for (BSimVesicle vesicle : signalsA) {
-					vesicle.action();
-					vesicle.updatePosition();
+				Vector<CleanerVesicle> removalVector = new Vector<CleanerVesicle>();
+				for (CleanerVesicle cleaner : cleanersA) {
+					signalsA.removeIf(signal -> cleaner.interaction(signal));
+					signalsB.removeIf(signal -> cleaner.interaction(signal));
+					if (cleaner.collided)
+						removalVector.add(cleaner);
+					cleaner.action();
+					cleaner.updatePosition();
 				}
-				for (BSimVesicle vesicle : signalsB) {
-					vesicle.action();
-					vesicle.updatePosition();
+				cleanersA.removeAll(removalVector);
+				removalVector.clear();
+				for (CleanerVesicle cleaner : cleanersB) {
+					signalsA.removeIf(signal -> cleaner.interaction(signal));
+					signalsB.removeIf(signal -> cleaner.interaction(signal));
+					if (cleaner.collided)
+						removalVector.add(cleaner);
+					cleaner.action();
+					cleaner.updatePosition();
 				}
-				for (BSimVesicle vesicle : cleanersA) {
-					vesicle.action();
-					vesicle.updatePosition();
+				cleanersB.removeAll(removalVector);
+				removalVector.clear();
+				for (BSimVesicle signal : signalsA) {
+					signal.action();
+					signal.updatePosition();
 				}
-				for (BSimVesicle vesicle : signalsC) {
-					vesicle.action();
-					vesicle.updatePosition();
+				for (BSimVesicle signal : signalsB) {
+					signal.action();
+					signal.updatePosition();
+				}
+				for (BSimVesicle signal : signalsC) {
+					signal.action();
+					signal.updatePosition();
 				}
 			}
 		});
@@ -137,7 +156,7 @@ public class ORGate {
 					draw(vesicle, Color.MAGENTA);
 				for (BSimVesicle vesicle : cleanersA)
 					draw(vesicle, Color.WHITE);
-				for (BSimVesicle vesicle : cleanersA)
+				for (BSimVesicle vesicle : cleanersB)
 					draw(vesicle, Color.WHITE);
 			}
 		};
