@@ -12,11 +12,20 @@ public class CleanerVesicle extends BSimVesicle {
         collided = false;
     }
 
+    public boolean getCollided() {
+        return collided;
+    }
+
+    @SuppressWarnings("unchecked")
     public boolean interaction(SignalVesicle v) {
         // If the cleaner is touching a signal, return true
-        if (outerDistance(v) < 0)
-            System.out.println("Collision occurred");
-        collided = outerDistance(v) < 0;
-        return outerDistance(v) < 0;
+        boolean intersect = outerDistance(v) <= 0;
+        if (!collided) {
+            collided = intersect;
+        }
+        if (!v.collided) {
+            v.collided = intersect;
+        }
+        return intersect;
     }
 }
