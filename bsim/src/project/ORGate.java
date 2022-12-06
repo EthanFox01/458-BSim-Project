@@ -13,6 +13,7 @@ import bsim.particle.BSimBacterium;
 import bsim.particle.BSimVesicle;
 import processing.core.PGraphics3D;
 
+@SuppressWarnings("unchecked")
 public class ORGate {
 
 	/*
@@ -25,13 +26,13 @@ public class ORGate {
 	 */
 	public static void generateSenderPopulation(BSim sim, Vector<SignalVesicle> signals, Vector<CleanerVesicle> cleaners,
 			Vector<SenderBacterium> pop, String popId, String transmission) {
-		while (pop.size() < 50) {
+		while (pop.size() < 140) {
 			Vector3d position;
 			if (popId == "a")
 				position = new Vector3d(Math.random() * 20 + 40, Math.random() * 20 + 70, Math.random() * 20 + 60);
 				// position = new Vector3d(50, 50, 50);
 			else
-				position = new Vector3d(Math.random() * 20 + 40, Math.random() * 20 + 30, Math.random() * 20 + 60);
+				position = new Vector3d(Math.random() * 20 + 40, Math.random() * 20 + 20, Math.random() * 20 + 60);
 			SenderBacterium b = new SenderBacterium(sim, position, transmission, popId);
 			b.setRadius();
 			b.setSurfaceAreaGrowthRate();
@@ -45,8 +46,8 @@ public class ORGate {
 	}
 
 	public static void generateReceiverPopulation(BSim sim, Vector<SignalVesicle> signals, Vector<ReceiverBacterium> pop) {
-		while (pop.size() < 200) {
-			Vector3d position = new Vector3d(Math.random() * 20 + 60, Math.random() * 20 + 50, Math.random() * 20 + 40);
+		while (pop.size() < 230) {
+			Vector3d position = new Vector3d(Math.random() * 20 + 60, Math.random() * 20 + 50, Math.random() * 20 + 55);
 			ReceiverBacterium b = new ReceiverBacterium(sim, position);
 			b.setRadius();
 			b.setSurfaceAreaGrowthRate();
@@ -72,11 +73,15 @@ public class ORGate {
 		final Vector<SenderBacterium> popA = new Vector<SenderBacterium>();
 		final Vector<CleanerVesicle> cleanersA = new Vector<CleanerVesicle>();
 		generateSenderPopulation(sim, signalsA, cleanersA, popA, "a", "10001110");
+		//generateSenderPopulation(sim, signalsA, cleanersA, popA, "a", "100");
+
 
 		final Vector<SignalVesicle> signalsB = new Vector<SignalVesicle>();
 		final Vector<SenderBacterium> popB = new Vector<SenderBacterium>();
 		final Vector<CleanerVesicle> cleanersB = new Vector<CleanerVesicle>();
 		generateSenderPopulation(sim, signalsB, cleanersB, popB, "b", "01010101");
+		//generateSenderPopulation(sim, signalsB, cleanersB, popB, "b", "010");
+
 
 		final Vector<SignalVesicle> signalsC = new Vector<SignalVesicle>();
 		final Vector<ReceiverBacterium> popC = new Vector<ReceiverBacterium>();
@@ -86,7 +91,7 @@ public class ORGate {
 		 * Set up the ticker
 		 */
 		sim.setTicker(new BSimTicker() {
-			double timeslot = 40.0;
+			double timeslot = 20.0;
 			int iteration = 0;
 			boolean clearing = false;
 
