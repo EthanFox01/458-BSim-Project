@@ -24,13 +24,14 @@ public class ORGate {
 	 * opposite SignalVesicles
 	 * 
 	 */
-	public static void generateSenderPopulation(BSim sim, Vector<SignalVesicle> signals, Vector<CleanerVesicle> cleaners,
+	public static void generateSenderPopulation(BSim sim, Vector<SignalVesicle> signals,
+			Vector<CleanerVesicle> cleaners,
 			Vector<SenderBacterium> pop, String popId, String transmission) {
-		while (pop.size() < 140) {
+		while (pop.size() < 100) {
 			Vector3d position;
 			if (popId == "a")
 				position = new Vector3d(Math.random() * 20 + 40, Math.random() * 20 + 70, Math.random() * 20 + 60);
-				// position = new Vector3d(50, 50, 50);
+			// position = new Vector3d(50, 50, 50);
 			else
 				position = new Vector3d(Math.random() * 20 + 40, Math.random() * 20 + 20, Math.random() * 20 + 60);
 			SenderBacterium b = new SenderBacterium(sim, position, transmission, popId);
@@ -45,7 +46,8 @@ public class ORGate {
 		}
 	}
 
-	public static void generateReceiverPopulation(BSim sim, Vector<SignalVesicle> signals, Vector<ReceiverBacterium> pop) {
+	public static void generateReceiverPopulation(BSim sim, Vector<SignalVesicle> signals,
+			Vector<ReceiverBacterium> pop) {
 		while (pop.size() < 230) {
 			Vector3d position = new Vector3d(Math.random() * 20 + 60, Math.random() * 20 + 50, Math.random() * 20 + 55);
 			ReceiverBacterium b = new ReceiverBacterium(sim, position);
@@ -58,13 +60,13 @@ public class ORGate {
 				pop.add(b);
 		}
 	}
+
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 		/*********************************************************
 		 * Set up the simulation
 		 */
 		BSim sim = new BSim();
-		
 
 		/*********************************************************
 		 * Set up the lists for storing vesicles and add bacteria to the simulation.
@@ -73,15 +75,13 @@ public class ORGate {
 		final Vector<SenderBacterium> popA = new Vector<SenderBacterium>();
 		final Vector<CleanerVesicle> cleanersA = new Vector<CleanerVesicle>();
 		generateSenderPopulation(sim, signalsA, cleanersA, popA, "a", "10001110");
-		//generateSenderPopulation(sim, signalsA, cleanersA, popA, "a", "100");
-
+		// generateSenderPopulation(sim, signalsA, cleanersA, popA, "a", "100");
 
 		final Vector<SignalVesicle> signalsB = new Vector<SignalVesicle>();
 		final Vector<SenderBacterium> popB = new Vector<SenderBacterium>();
 		final Vector<CleanerVesicle> cleanersB = new Vector<CleanerVesicle>();
 		generateSenderPopulation(sim, signalsB, cleanersB, popB, "b", "01010101");
-		//generateSenderPopulation(sim, signalsB, cleanersB, popB, "b", "010");
-
+		// generateSenderPopulation(sim, signalsB, cleanersB, popB, "b", "010");
 
 		final Vector<SignalVesicle> signalsC = new Vector<SignalVesicle>();
 		final Vector<ReceiverBacterium> popC = new Vector<ReceiverBacterium>();
@@ -91,9 +91,10 @@ public class ORGate {
 		 * Set up the ticker
 		 */
 		sim.setTicker(new BSimTicker() {
-			double timeslot = 20.0;
+			double timeslot = 10.0;
 			int iteration = 0;
-			boolean clearing = false;
+			boolean clearing = true;
+			boolean buffering = false;
 
 			@SuppressWarnings("unchecked")
 			@Override
@@ -120,18 +121,40 @@ public class ORGate {
 						// b.cleanerList.clear();
 					}
 				}
-				if (clearing && sim.getTime() % timeslot == 0.75 * timeslot) {
-					System.out.println("Clearing vesicles");
-					for (SenderBacterium b : popA)
-						b.setMode(2);
-					for (SenderBacterium b : popB)
-						b.setMode(2);
+				if (buffering) {
+					if (clearing && sim.getTime() % timeslot == 0.6 * timeslot) {
+						System.out.println("Clearing vesicles");
+						for (SenderBacterium b : popA)
+							b.setMode(2);
+						for (SenderBacterium b : popB)
+							b.setMode(2);
+					} else if (clearing && sim.getTime() % timeslot == 0.6 * timeslot) {
+						System.out.println("Waiting");
+						for (SenderBacterium b : popA)
+							b.setMode(0);
+						for (SenderBacterium b : popB)
+							b.setMode(0);
+					} else if (!clearing && sim.getTime() % timeslot == 0.75 * timeslot) {
+						System.out.println("Waiting");
+						for (SenderBacterium b : popA)
+							b.setMode(0);
+						for (SenderBacterium b : popB)
+							b.setMode(0);
+					}
+				} else {
+					if (clearing && sim.getTime() % timeslot == 0.75 * timeslot) {
+						System.out.println("Clearing vesicles");
+						for (SenderBacterium b : popA)
+							b.setMode(2);
+						for (SenderBacterium b : popB)
+							b.setMode(2);
+					}
 				}
-				
+
 				for (SenderBacterium b : popA) {
 					b.action();
 					b.removeCollidedVesicles();
-					
+
 				}
 				for (SenderBacterium b : popB) {
 					b.action();
