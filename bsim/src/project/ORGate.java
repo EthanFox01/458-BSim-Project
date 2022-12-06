@@ -27,7 +27,7 @@ public class ORGate {
 	public static void generateSenderPopulation(BSim sim, Vector<SignalVesicle> signals,
 			Vector<CleanerVesicle> cleaners,
 			Vector<SenderBacterium> pop, String popId, String transmission) {
-		while (pop.size() < 100) {
+		while (pop.size() < 90) {
 			Vector3d position;
 			if (popId == "a")
 				position = new Vector3d(Math.random() * 20 + 40, Math.random() * 20 + 70, Math.random() * 20 + 60);
@@ -91,9 +91,9 @@ public class ORGate {
 		 * Set up the ticker
 		 */
 		sim.setTicker(new BSimTicker() {
-			double timeslot = 10.0;
+			double timeslot = 40.0;
 			int iteration = 0;
-			boolean clearing = true;
+			boolean clearing = false;
 			boolean buffering = false;
 
 			@SuppressWarnings("unchecked")
@@ -107,18 +107,14 @@ public class ORGate {
 						iteration++;
 					}
 					System.out.println("Sending a new bit");
-					// cleanersA.removeIf(cleaner -> cleanersA.indexOf(cleaner) % 4 != 0);
-					// signalsA.clear();
+
 					for (SenderBacterium b : popA) {
 						char mode = b.transmission.charAt(iteration);
 						b.setMode(Integer.parseInt(String.valueOf(mode)));
-						// System.out.println(b.removeCollidedVesicles());
-						// b.cleanerList.clear();
 					}
 					for (SenderBacterium b : popB) {
 						char mode = b.transmission.charAt(iteration);
 						b.setMode(Integer.parseInt(String.valueOf(mode)));
-						// b.cleanerList.clear();
 					}
 				}
 				if (buffering) {
