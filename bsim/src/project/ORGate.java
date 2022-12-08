@@ -48,7 +48,7 @@ public class ORGate {
 
 	public static void generateReceiverPopulation(BSim sim, Vector<SignalVesicle> signals,
 			Vector<ReceiverBacterium> pop) {
-		while (pop.size() < 230) {
+		while (pop.size() < 250) {
 			Vector3d position = new Vector3d(Math.random() * 20 + 60, Math.random() * 20 + 50, Math.random() * 20 + 55);
 			ReceiverBacterium b = new ReceiverBacterium(sim, position);
 			b.setRadius();
@@ -74,14 +74,14 @@ public class ORGate {
 		final Vector<SignalVesicle> signalsA = new Vector<SignalVesicle>();
 		final Vector<SenderBacterium> popA = new Vector<SenderBacterium>();
 		final Vector<CleanerVesicle> cleanersA = new Vector<CleanerVesicle>();
-		generateSenderPopulation(sim, signalsA, cleanersA, popA, "a", "10001110");
-		// generateSenderPopulation(sim, signalsA, cleanersA, popA, "a", "100");
+		//generateSenderPopulation(sim, signalsA, cleanersA, popA, "a", "10001110");
+		generateSenderPopulation(sim, signalsA, cleanersA, popA, "a", "100");
 
 		final Vector<SignalVesicle> signalsB = new Vector<SignalVesicle>();
 		final Vector<SenderBacterium> popB = new Vector<SenderBacterium>();
 		final Vector<CleanerVesicle> cleanersB = new Vector<CleanerVesicle>();
-		generateSenderPopulation(sim, signalsB, cleanersB, popB, "b", "01010101");
-		// generateSenderPopulation(sim, signalsB, cleanersB, popB, "b", "010");
+		//generateSenderPopulation(sim, signalsB, cleanersB, popB, "b", "01010101");
+		generateSenderPopulation(sim, signalsB, cleanersB, popB, "b", "010");
 
 		final Vector<SignalVesicle> signalsC = new Vector<SignalVesicle>();
 		final Vector<ReceiverBacterium> popC = new Vector<ReceiverBacterium>();
@@ -91,10 +91,10 @@ public class ORGate {
 		 * Set up the ticker
 		 */
 		sim.setTicker(new BSimTicker() {
-			double timeslot = 40.0;
+			double timeslot = 30.0;
 			int iteration = 0;
 			boolean clearing = false;
-			boolean buffering = false;
+			boolean buffering = true;
 
 			@SuppressWarnings("unchecked")
 			@Override
@@ -118,13 +118,13 @@ public class ORGate {
 					}
 				}
 				if (buffering) {
-					if (clearing && sim.getTime() % timeslot == 0.6 * timeslot) {
+					if (clearing && sim.getTime() % timeslot == 0.5 * timeslot) {
 						System.out.println("Clearing vesicles");
 						for (SenderBacterium b : popA)
 							b.setMode(2);
 						for (SenderBacterium b : popB)
 							b.setMode(2);
-					} else if (clearing && sim.getTime() % timeslot == 0.6 * timeslot) {
+					} else if (clearing && sim.getTime() % timeslot == 0.5 * timeslot) {
 						System.out.println("Waiting");
 						for (SenderBacterium b : popA)
 							b.setMode(0);

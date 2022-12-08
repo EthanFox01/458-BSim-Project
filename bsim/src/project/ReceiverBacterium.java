@@ -10,7 +10,7 @@ public class ReceiverBacterium extends BSimBacterium {
     private static String receivedB = "";
     private static int receivedInTimeslotA = 0;
     private static int receivedInTimeslotB = 0;
-    private static int threshold = 100;
+    private static int threshold = 60;
 
     public ReceiverBacterium(BSim sim, Vector3d position) {
         super(sim, position);
