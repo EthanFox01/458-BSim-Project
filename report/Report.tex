@@ -18,7 +18,7 @@
 \IEEEauthorblockA{\textit{Undergraduate Student} \\
 \textit{University of Nebraska-Lincoln}\\
 Lincoln, NE USA \\
-efox@huskers.unl.edu}
+efox6@huskers.unl.edu}
 \and
 \IEEEauthorblockN{Jackson Herman}
 \IEEEauthorblockA{\textit{Undergraduate Student} \\
@@ -30,20 +30,14 @@ jherman5@huskers.unl.edu}
 \maketitle
 
 \begin{abstract}
-This document is a model and instructions for \LaTeX.
-This and the IEEEtran.cls file define the components of your paper [title, text, heads, etc.]. *CRITICAL: Do Not Use Symbols, Special Characters, Footnotes, 
-or Math in Paper Title or Abstract.
+Molecular Communication Systems are a revolutionary new field of research that promises to open pathways in many different areas, such as in the military or the medical field. The use of biological processes to emulate traditional communication systems can help supplant the need for implanting machines within the body to perform tasks such as medical injections or early warning systems for diseases. The major benefit of these systems is that they are extremely biocompatible, as they are made out of cells and molecules already present within the human body. This increased biocompatibility makes these systems far safer and less likely to be rejected than traditional machines. This paper looks to explore the nature of using a molecular communication system to emulate simple logic gates by simulating an experiment using populations of bacteria. This experiment explores the different aspects of the system and attempts to correct several common problems found in a diffusion-based system through use of a novel cooperative channel clearing system where the transmitter populations release special molecules to neutralize any lingering transmission molecules and remove clutter from the transmission channel. Afterwards, the results of the experiment are discussed, and conclusions about the effectiveness of this novel design are made.
 \end{abstract}
 
 \begin{IEEEkeywords}
-component, formatting, style, styling, insert
+molecule, bacteria, communication network, molecular communication, diffusion, diffusion-based, channel, transmitter, transmission molecules, clearing molecules
 \end{IEEEkeywords}
 
 \section{Introduction}
-This document is a model and instructions for \LaTeX.
-Please observe the conference page limits. 
-
-\subsection{Background}
 
 The concept of using molecules and biological processes to emulate traditional computer communication networks is a relatively new field of research, and as such there are plenty of areas within it where new advancements and discoveries can be made. For example, in a diffusion-based communication system one of the most prevalent problems is the channel being clogged by transmitted molecules, leading to inaccurate data as the receiver detects molecules, even when it shouldn’t be.
 \\
@@ -128,7 +122,27 @@ Each transmitter generates its transmission molecules for 50\% of the time slot 
 
 \section{Simulation Results}
 
+\subsection{No Clearing}
+Running the simulation without clearing gave results that were to be expected. The accuracy in this mode was 0.72. Each incorrect bit that was received occurred through a common bit sequence. The leading 0 bits would all be received correctly. However, any 0 bit that followed a 1 bit resulted in a 1 bit being received. After a time slot ended, there would still be enough molecules near the receiver to reach the threshold, and trigger a 1 bit, regardless of the current transmission. The lingering molecules dispersed enough to never register a third 1 bit on their own. The bit sequence 100 would result in 110 being received for example.
+
+\subsection{Clearing}
+
+The accuracy with clearing was 0.71, close to the same as without clearing. The clearing molecules did bind with and remove transmission molecules. However, they were almost completely ineffective in the first few bits of a transmission. Despite producing the half number of clearing molecules and transmission molecules per time slot before signal reception, the concentration of clearing molecules was not initially sufficient to prevent the repeated bits that occurred without clearing. As the simulation ran, the concentration of clearing molecules increased to become effective in preventing repeated bits.
+\\
+\par
+However, this also caused some transmitted 1 bits to not be received. This was especially prevalent when both transmitters sent 0 bits. Due to the design, each transmitter emitted clearing molecules in every time slot without knowing if the other transmitter emitted transmission molecules. The environment would be flooded with a surplus of clearing molecules that prevented further transmissions for 1-2 bits. The 1 bits in bit sequences with leading 0 bits, like 001, were not received.
+
+\begin{figure}
+\includegraphics[width=\linewidth]{Error_Rates.png}
+\caption{Fig 5: Error rates with and without clearing.}
+\end{figure}
+
 \section{Conclusion}
+
+The goal of the clearing system was to increase the accuracy of a diffusion-based system. With the implementation testing, there was no improvement. This design failed to account for repeated 0 bits from each transmitter and still had some of the failures from the system without clearing. The other point of failure was designing the transmitters to emit clearing molecules every time slot. This design assumes that the other transmitter is always emitting 1 bits. A way to resolve this error would be to have the transmitter populations receive transmission molecules like the receiver to monitor the other transmitter. The clearing molecules would only be emitted when the transmitter sends a 1 bit or detects the other transmitter sending a 1 bit. The amount of clearing molecules released would be proportional to the amount of 1 bits transmitted. 
+\\
+\par
+Another potential solution would be using multiple channels. Each transmitter would have two types of transmission molecules and clearing molecules, that alternate between time slots. With this system, lingering transmission molecules would no longer cause repeated bits. Combining these two changes would likely result in a much more accurate system. However, designing a biological implementation of this simulated design would be far more complex. Creating biological communication systems is a balance of simplicity and accuracy, and the design discussed is currently far too inaccurate to be useful.
 
 \begin{thebibliography}{00}
 \bibitem{b1} Matyjaszkiewicz A, Fiore G, et al. (2017) BSim 2.0: An Advanced Agent-Based Cell Simulator. ACS Synthetic Biology (web)Article ASAP doi:10.1021/acssynbio.7b00121
